@@ -10,7 +10,8 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=150, blank=False)
     last_name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(blank=False, unique=True)
-    role = models.ForeignKey(Role, related_name='roles', on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, db_constraint=True, related_name='roles', on_delete=models.CASCADE, null=True)
+    is_superuser = models.BooleanField(null=False, default=False)
     USERNAME_FIELD = 'email'  # unique identifier field
     REQUIRED_FIELDS = ['username']  # createsuperuser時會要求填這些欄位
     objects = UserManager()

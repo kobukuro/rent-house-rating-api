@@ -1,6 +1,5 @@
 from django.db import models
 
 
-class Role(models.Model):
+class Api(models.Model):
     name = models.CharField(max_length=30, blank=False, unique=True)
-    description = models.TextField(null=True)
