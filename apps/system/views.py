@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
-from apps.users.serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from apps.system.serializers import UserSerializer
 from rest_framework_jwt.views import ObtainJSONWebToken
-from apps.users.models import User
+from apps.system.models import User
 
 
 class RegisterUserView(APIView):

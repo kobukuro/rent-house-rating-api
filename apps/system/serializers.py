@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from apps.users.models import User
-from apps.roles.models import Role
+from apps.system.models import User
+from apps.system.models import Role
 from rent_house_rating_api.enumerations import RoleType
 
 

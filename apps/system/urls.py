@@ -1,7 +1,7 @@
 from django.urls import path
-from apps.users import views
+from apps.system import views
 from rest_framework_jwt.views import obtain_jwt_token
-from apps.users.views import CustomObtainJSONWebToken
+from apps.system.views import CustomObtainJSONWebToken
 
 urlpatterns = [
     # path('users', views.UserList.as_view()),

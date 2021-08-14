@@ -1,7 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
-from apps.roles.models import Role
-from apps.users.manager import UserManager
+
+
+class Role(models.Model):
+    name = models.CharField(max_length=30, blank=False, unique=True)
+    description = models.TextField(null=True)
+
+
+from apps.system.manager import UserManager
 
 
 # 需要預設user的欄位就使用AbstractUser，不要就使用AbstractBaseUser
@@ -15,3 +21,12 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'email'  # unique identifier field
     REQUIRED_FIELDS = ['username']  # createsuperuser時會要求填這些欄位
     objects = UserManager()
+
+
+class Api(models.Model):
+    name = models.CharField(max_length=30, blank=False, unique=True)
+
+
+class ApiPrivileges(models.Model):
+    api = models.ForeignKey(Api, related_name='apis', on_delete=models.CASCADE)
+    privilege = models.IntegerField(null=False)

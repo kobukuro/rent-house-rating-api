@@ -1,5 +1,5 @@
 from django.contrib.auth.models import BaseUserManager
-from apps.roles.models import Role
+from apps.system.models import Role
 from rent_house_rating_api.enumerations import RoleType
 
 

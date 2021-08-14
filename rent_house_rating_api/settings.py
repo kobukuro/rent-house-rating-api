@@ -35,9 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.users.apps.UsersConfig',
-    'apps.roles.apps.RolesConfig',
-    'apps.apis.apps.ApisConfig'
+    'apps.system.apps.SystemConfig'
 ]
 
 MIDDLEWARE = [
@@ -89,7 +87,7 @@ DATABASES = {
 }
 
 # 修改使用的user model
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'system.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
