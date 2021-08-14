@@ -4,7 +4,7 @@ from rent_house_rating_api.enumerations import RoleType
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password, role_name=RoleType.NORMAL_USER, **extra_fields):
+    def create_user(self, email, password, role_name, **extra_fields):
         email = self.normalize_email(email)
         if role_name == '':
             user = self.model(email=email, is_superuser=True, **extra_fields)

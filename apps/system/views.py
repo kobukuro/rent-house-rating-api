@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from apps.system.serializers import UserSerializer
-from rest_framework_jwt.views import ObtainJSONWebToken
+from rest_framework_jwt.views import ObtainJSONWebTokenView
 from apps.system.models import User
 
 
@@ -19,7 +19,7 @@ class RegisterUserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CustomObtainJSONWebToken(ObtainJSONWebToken):
+class CustomObtainJSONWebToken(ObtainJSONWebTokenView):
     def post(self, request, *args, **kwargs):
         parent_result = super().post(request, *args, **kwargs)
         parent_result_status_code = super().post(request, *args, **kwargs).status_code
@@ -30,3 +30,11 @@ class CustomObtainJSONWebToken(ObtainJSONWebToken):
             user.last_login = datetime.datetime.now()
             user.save()
         return parent_result
+
+
+class UserList(APIView):
+    # TODO 要加上權限確認
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
