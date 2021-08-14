@@ -24,7 +24,7 @@ class CustomObtainJSONWebToken(ObtainJSONWebTokenView):
         parent_result = super().post(request, *args, **kwargs)
         parent_result_status_code = super().post(request, *args, **kwargs).status_code
         # 成功登入要update users_user table的last_login欄位
-        if parent_result_status_code == status.HTTP_200_OK:
+        if parent_result_status_code == status.HTTP_201_CREATED:
             user = User.objects.get(email=request.data['email'])
             import datetime
             user.last_login = datetime.datetime.now()
