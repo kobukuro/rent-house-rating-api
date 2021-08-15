@@ -4,6 +4,7 @@ from rest_framework import status
 from apps.system.serializers import UserSerializer
 from rest_framework_jwt.views import ObtainJSONWebTokenView
 from apps.system.models import User
+from rent_house_rating_api.permission_class import CustomPermissionClass
 
 
 class RegisterUserView(APIView):
@@ -33,7 +34,8 @@ class CustomObtainJSONWebToken(ObtainJSONWebTokenView):
 
 
 class UserList(APIView):
-    # TODO 要加上權限確認
+    permission_classes = [CustomPermissionClass(api_name=__qualname__)]
+
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
