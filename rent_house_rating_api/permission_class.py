@@ -15,7 +15,10 @@ class CustomPermissionClass(BasePermission):
         if request.user.is_superuser:
             return True
         else:
-            api_id = Api.objects.get(name=self.api_name).id
+            try:
+                api_id = Api.objects.get(name=self.api_name).id
+            except Api.DoesNotExist:
+                return False
             role_id = request.user.role.id
             privilege = ApiPrivileges.objects.get(api_id=api_id,
                                                   role_id=role_id).privilege
