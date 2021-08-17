@@ -20,12 +20,12 @@ AUTH_DATA = {
     },
     Roles().NORMAL_USER_ONE_ROLE_NAME: {
         USERNAME_NAME: 'normal_user',
-        EMAIL_NAME: 'normal_user@normal_user.com',
+        EMAIL_NAME: 'normal_user@normaluser.com',
         PASSWORD_NAME: 'normal_user'
     },
     Roles().NORMAL_USER_TWO_ROLE_NAME: {
         USERNAME_NAME: 'normal_user2',
-        EMAIL_NAME: 'normal_user2@normal_user2.com',
+        EMAIL_NAME: 'normal_user2@normaluser2.com',
         PASSWORD_NAME: 'normal_user2'
     }
 }

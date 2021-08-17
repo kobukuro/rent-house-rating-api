@@ -16,9 +16,8 @@ class TestBase(TestCase):
         self.login(self.email, self.password)
 
     def create_users(self):
-        # create superuser
-        roles = setting.Roles()
-        role = roles.SUPERUSER_ROLE_NAME
+        # region create superuser
+        role = setting.Roles.SUPERUSER_ROLE_NAME
         username = setting.AUTH_DATA[role][setting.USERNAME_NAME]
         email = setting.AUTH_DATA[role][setting.EMAIL_NAME]
         password = setting.AUTH_DATA[role][setting.PASSWORD_NAME]
@@ -26,12 +25,17 @@ class TestBase(TestCase):
         User.objects.create_superuser(username=username,
                                       email=email,
                                       password=password)
-        # response = self.client.post(self.register_url,
-        #                             {'username': username,
-        #                              'email': email,
-        #                              'password': password,
-        #                              'first_name': '',
-        #                              'last_name': ''})
+        # endregion
+        role = setting.Roles.NORMAL_USER_ONE_ROLE_NAME
+        username = setting.AUTH_DATA[role][setting.USERNAME_NAME]
+        email = setting.AUTH_DATA[role][setting.EMAIL_NAME]
+        password = setting.AUTH_DATA[role][setting.PASSWORD_NAME]
+        response = self.client.post(self.register_url,
+                         {'username': username,
+                          'email': email,
+                          'password': password,
+                          'first_name': 'test_first_name',
+                          'last_name': 'test_last_name'})
         # print(response.data)
 
     def login(self, email, password):
