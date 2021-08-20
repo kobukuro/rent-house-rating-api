@@ -3,7 +3,6 @@ from rest_framework import status
 
 
 class Country(object):
-    country_url = '/location/countries'
 
     def test_get_countries(self):
         res = self.client.get(self.country_url)

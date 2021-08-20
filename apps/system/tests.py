@@ -3,7 +3,6 @@ from rest_framework import status
 
 
 class User(object):
-    user_url = '/system/users'
 
     def test_get_users(self):
         res = self.client.get(self.user_url)

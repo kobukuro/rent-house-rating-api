@@ -6,6 +6,8 @@ from tests.setting import setting
 class TestBase(TestCase):
     register_url = '/system/register'
     login_url = '/system/login'
+    user_url = '/system/users'
+    country_url = '/location/countries'
 
     def setUp(self):
         self.client = APIClient()
