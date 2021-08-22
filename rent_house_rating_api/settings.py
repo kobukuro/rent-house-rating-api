@@ -94,6 +94,7 @@ DATABASES = {
         'PASSWORD': '123',
         'HOST': 'localhost',
         'PORT': '3306',
+        'OPTIONS': {'init_command': 'SET storage_engine=INNODB;'}
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',

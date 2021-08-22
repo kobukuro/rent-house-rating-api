@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from apps.location.models import Country
+# from apps.location.models import Location
 
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -7,6 +8,8 @@ class CountrySerializer(serializers.ModelSerializer):
         model = Country
         fields = ['id', 'name']  # response的欄位
 
+
+# Serializer在migrate是必要的，否則會出錯
 # class LocationSerializer(serializers.ModelSerializer):
 #     # response顯示哪一個欄位的設定(顯示country table的country_name)
 #     # 記得fields裡面也要有

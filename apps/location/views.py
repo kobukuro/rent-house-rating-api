@@ -52,3 +52,11 @@ class CountryDetail(APIView):
         country = self.get_object(pk)
         country.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# class LocationList(APIView):
+#     def get(self, request):
+#         self.do_nothing()
+#         id = request.user.id
+#         locations = Location.objects.all()
+#         serializer = LocationSerializer(locations, many=True)
+#         return Response(serializer.data)
