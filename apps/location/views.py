@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from apps.location.models import Country
-from apps.location.serializers import CountrySerializer
+from apps.location.models import Country, Location
+from apps.location.serializers import CountrySerializer, LocationSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rent_house_rating_api.permission_class import CustomPermissionClass
@@ -53,10 +53,9 @@ class CountryDetail(APIView):
         country.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# class LocationList(APIView):
-#     def get(self, request):
-#         self.do_nothing()
-#         id = request.user.id
-#         locations = Location.objects.all()
-#         serializer = LocationSerializer(locations, many=True)
-#         return Response(serializer.data)
+
+class LocationList(APIView):
+    def get(self, request):
+        locations = Location.objects.all()
+        serializer = LocationSerializer(locations, many=True)
+        return Response(serializer.data)

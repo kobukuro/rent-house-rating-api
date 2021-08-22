@@ -1,0 +1,1 @@
+INSERT INTO `rent-house-rating`.system_role (id, name, description) VALUES (1, 'normal_user', null);

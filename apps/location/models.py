@@ -16,9 +16,11 @@ class Country(models.Model):
 class Location(models.Model):
     address = models.TextField(blank=False)
     country = models.ForeignKey(Country, related_name='locations', on_delete=models.CASCADE, null=False)
-    created_by = models.ForeignKey(User, related_name='locations', on_delete=models.CASCADE, null=False)
+    created_by = models.ForeignKey(User, related_name='locations', on_delete=models.CASCADE, null=False,
+                                   # 指定column name(不會因為ForeignKey，在後面加上column name)
+                                   db_column='created_by')
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    last_updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
