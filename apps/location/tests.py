@@ -56,3 +56,11 @@ class Country(object):
             self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         elif self.role == Roles.NORMAL_USER_ONE_ROLE_NAME:
             self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class Location(object):
+    def test_get_all_locations(self):
+        res = self.client.get(self.location_url)
+        if res.status_code != status.HTTP_200_OK and \
+                res.status_code != status.HTTP_204_NO_CONTENT:
+            raise Exception(f'回傳status_code:{res.status_code}')

@@ -5,7 +5,7 @@ urlpatterns = [
     # class based views
     path('countries', views.CountryList.as_view()),
     path('countries/<int:pk>', views.CountryDetail.as_view()),
-    # path('locations', views.LocationList.as_view()),
+    path('locations', views.LocationList.as_view()),
     # path('locations/<int:pk>', views.LocationDetail.as_view()),
 
     # function based views

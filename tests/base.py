@@ -8,6 +8,7 @@ class TestBase(TestCase):
     login_url = '/system/login'
     user_url = '/system/users'
     country_url = '/location/countries'
+    location_url = '/location/locations'
 
     def setUp(self):
         self.client = APIClient()
@@ -33,11 +34,11 @@ class TestBase(TestCase):
         email = setting.AUTH_DATA[role][setting.EMAIL_NAME]
         password = setting.AUTH_DATA[role][setting.PASSWORD_NAME]
         response = self.client.post(self.register_url,
-                         {'username': username,
-                          'email': email,
-                          'password': password,
-                          'first_name': 'test_first_name',
-                          'last_name': 'test_last_name'})
+                                    {'username': username,
+                                     'email': email,
+                                     'password': password,
+                                     'first_name': 'test_first_name',
+                                     'last_name': 'test_last_name'})
         # print(response.data)
 
     def login(self, email, password):
