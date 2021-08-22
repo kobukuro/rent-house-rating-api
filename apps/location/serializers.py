@@ -9,7 +9,7 @@ class CountrySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']  # response的欄位
 
 
-# Serializer在migrate是必要的，否則會出錯
+
 # class LocationSerializer(serializers.ModelSerializer):
 #     # response顯示哪一個欄位的設定(顯示country table的country_name)
 #     # 記得fields裡面也要有
