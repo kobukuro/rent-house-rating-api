@@ -16,6 +16,8 @@ class Country(models.Model):
 class Location(models.Model):
     address = models.TextField(blank=False)
     country = models.ForeignKey(Country, related_name='locations', on_delete=models.CASCADE, null=False)
+    # 房東名字，可不填
+    owner_name = models.CharField(max_length=100, null=True)
     created_by = models.ForeignKey(User, related_name='locations', on_delete=models.CASCADE, null=False,
                                    # 指定column name(不會因為ForeignKey，在後面加上column name)
                                    db_column='created_by')
@@ -25,5 +27,5 @@ class Location(models.Model):
     class Meta:
         constraints = [
             # fields順序很重要！
-            models.UniqueConstraint(fields=['address', 'country'], name='unique_address_country'),
+            models.UniqueConstraint(fields=['address', 'country', 'owner_name'], name='unique_address_country'),
         ]

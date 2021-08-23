@@ -17,7 +17,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ['id', 'address', 'country_id', 'country_name']
+        fields = ['id', 'address', 'country_id', 'country_name', 'owner_name']
 
 #     def update(self, instance, validated_data):
 #         # dict.get(arg1, arg2) 第二個參數為預設值 沒有的話會帶這個

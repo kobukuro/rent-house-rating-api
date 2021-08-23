@@ -92,3 +92,5 @@ class LocationDetail(APIView):
         location = self.get_object(pk)
         serializer = LocationSerializer(location)
         return Response(serializer.data)
+
+    # 假如這個location底下有不是自己的rating，就不能改，也不能刪
