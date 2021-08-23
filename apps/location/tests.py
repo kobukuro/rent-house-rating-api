@@ -64,3 +64,13 @@ class Location(object):
         if res.status_code != status.HTTP_200_OK and \
                 res.status_code != status.HTTP_204_NO_CONTENT:
             raise Exception(f'回傳status_code:{res.status_code}')
+
+    def test_create_location(self):
+        country_id = self.create_country()
+        res = self.client.post(self.location_url,
+                               {'country_id': country_id,
+                                'address': '東京都墨田区押上1丁目1−2'})
+        if self.role == Roles.SUPERUSER_ROLE_NAME:
+            self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        elif self.role == Roles.NORMAL_USER_ONE_ROLE_NAME:
+            self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)

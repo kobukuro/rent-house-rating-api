@@ -1,10 +1,12 @@
 from rest_framework.views import APIView
 from apps.location.models import Country, Location
+from apps.system.models import User
 from apps.location.serializers import CountrySerializer, LocationSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rent_house_rating_api.permission_class import CustomPermissionClass
 from django.http import Http404
+from django.db import IntegrityError
 
 
 class CountryList(APIView):
@@ -55,7 +57,23 @@ class CountryDetail(APIView):
 
 
 class LocationList(APIView):
+    permission_classes = [CustomPermissionClass(api_name=__qualname__)]
+
     def get(self, request):
         locations = Location.objects.all()
         serializer = LocationSerializer(locations, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        country_id = request.data['country_id']
+        country = Country.objects.get(id=country_id)
+        user = User.objects.get(id=request.user.id)
+        serializer = LocationSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save(country_id=country.id, created_by=user)
+            except IntegrityError as e:
+                serializer.error_messages = str(e)
+                return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
