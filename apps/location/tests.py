@@ -37,6 +37,10 @@ class Country(object):
                               {'name': new_country_name})
         if self.role == Roles.SUPERUSER_ROLE_NAME:
             self.assertEqual(res.status_code, status.HTTP_200_OK)
+            res = self.client.get(f'{self.country_url}/{country_id}')
+            if res.data['name'] != new_country_name:
+                raise Exception(f'expected country_name:{new_country_name}, '
+                                f'actual country_name:{res.data["name"]}')
         elif self.role == Roles.NORMAL_USER_ONE_ROLE_NAME:
             self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -54,6 +58,8 @@ class Country(object):
         res = self.client.delete(f'{self.country_url}/{country_id}')
         if self.role == Roles.SUPERUSER_ROLE_NAME:
             self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+            res = self.client.get(f'{self.country_url}/{country_id}')
+            self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
         elif self.role == Roles.NORMAL_USER_ONE_ROLE_NAME:
             self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
