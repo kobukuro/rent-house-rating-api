@@ -55,11 +55,11 @@ def main():
                 suites_list.append(suite)
             result = unittest.TextTestRunner(verbosity=2).run(unittest.TestSuite(suites_list))
         else:
-            from tests.test_roles import SuperUser
+            from tests.test_roles import NormalUserOne
             from apps.location.tests import Location, Country
-            SuperUser.__bases__ += (Location, Country,)
+            NormalUserOne.__bases__ += (Location, Country,)
             single_test = unittest.TestSuite()
-            single_test.addTest(SuperUser('test_create_location'))
+            single_test.addTest(NormalUserOne('test_get_specific_location'))
             result = unittest.TextTestRunner(verbosity=2).run(single_test)
         return exit(1) if result.errors else exit(0)
     else:

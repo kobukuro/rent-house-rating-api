@@ -76,7 +76,13 @@ class Location(object):
         res = self.client.post(self.location_url,
                                {'country_id': country_id,
                                 'address': '東京都墨田区押上1丁目1−2'})
-        if self.role == Roles.SUPERUSER_ROLE_NAME:
-            self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        elif self.role == Roles.NORMAL_USER_ONE_ROLE_NAME:
-            self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+    def test_get_specific_location(self):
+        country_id = self.create_country()
+        res = self.client.post(self.location_url,
+                               {'country_id': country_id,
+                                'address': '東京都墨田区押上1丁目1−2'})
+        location_id = res.data['id']
+        res = self.client.get(f'{self.location_url}/{location_id}')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
