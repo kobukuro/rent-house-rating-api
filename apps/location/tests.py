@@ -88,3 +88,11 @@ class Location(object):
         location_id = res.data['id']
         res = self.client.get(f'{self.location_url}/{location_id}')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
+class Rating(object):
+    def test_get_all_ratings(self):
+        res = self.client.get(self.rating_url)
+        if res.status_code != status.HTTP_200_OK and \
+                res.status_code != status.HTTP_204_NO_CONTENT:
+            raise Exception(f'回傳status_code:{res.status_code}')

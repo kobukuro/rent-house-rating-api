@@ -9,6 +9,7 @@ class TestBase(TestCase):
     user_url = '/system/users'
     country_url = '/location/countries'
     location_url = '/location/locations'
+    rating_url = '/location/ratings'
 
     def setUp(self):
         self.client = APIClient()

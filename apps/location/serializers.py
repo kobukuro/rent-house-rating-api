@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from apps.location.models import Country
-from apps.location.models import Location
+from apps.location.models import Country, Location, Rating
 
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -19,6 +18,7 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = ['id', 'address', 'country_id', 'country_name', 'owner_name']
 
+
 #     def update(self, instance, validated_data):
 #         # dict.get(arg1, arg2) 第二個參數為預設值 沒有的話會帶這個
 #         instance.country_id = validated_data.get('country_id',
@@ -27,3 +27,7 @@ class LocationSerializer(serializers.ModelSerializer):
 #                                                         instance.address_full_text)
 #         instance.save()
 #         return instance
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating

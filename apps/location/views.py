@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
-from apps.location.models import Country, Location
+from apps.location.models import Country, Location, Rating
 from apps.system.models import User
-from apps.location.serializers import CountrySerializer, LocationSerializer
+from apps.location.serializers import CountrySerializer, LocationSerializer, RatingSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rent_house_rating_api.permission_class import CustomPermissionClass
@@ -94,3 +94,12 @@ class LocationDetail(APIView):
         return Response(serializer.data)
 
     # 假如這個location底下有不是自己的rating，就不能改，也不能刪
+
+
+class RatingList(APIView):
+    permission_classes = [CustomPermissionClass(api_name=__qualname__)]
+
+    def get(self, request):
+        ratings = Rating.objects.all()
+        serializer = RatingSerializer(ratings, many=True)
+        return Response(serializer.data)
