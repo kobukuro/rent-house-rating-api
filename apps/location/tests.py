@@ -65,6 +65,15 @@ class Country(object):
 
 
 class Location(object):
+    def create_location(self):
+        country_id = self.create_country()
+        res = self.client.post(self.location_url,
+                               {'country_id': country_id,
+                                'address': '東京都墨田区押上1丁目1−2',
+                                'owner_name': '東京市政府'})
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        return res.data['id']
+
     def test_get_all_locations(self):
         res = self.client.get(self.location_url)
         if res.status_code != status.HTTP_200_OK and \
@@ -96,3 +105,12 @@ class Rating(object):
         if res.status_code != status.HTTP_200_OK and \
                 res.status_code != status.HTTP_204_NO_CONTENT:
             raise Exception(f'回傳status_code:{res.status_code}')
+
+    def test_create_rating(self):
+        location_id = self.create_location()
+        res = self.client.post(self.rating_url,  # {'location_id': location_id}
+                               {'location_id': location_id,
+                                'rating': 1,
+                                'comment': 'test'})
+        print(res.data)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)

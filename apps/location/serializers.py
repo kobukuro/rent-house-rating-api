@@ -31,3 +31,4 @@ class LocationSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
+        fields = ['id', 'rating', 'comment', 'location_id']

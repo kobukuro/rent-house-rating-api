@@ -103,3 +103,15 @@ class RatingList(APIView):
         ratings = Rating.objects.all()
         serializer = RatingSerializer(ratings, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        user = User.objects.get(id=request.user.id)
+        serializer = RatingSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save(location_id=request.data['location_id'], created_by=user)
+            except IntegrityError as e:
+                serializer.error_messages = str(e)
+                return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
