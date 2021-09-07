@@ -127,3 +127,44 @@ class Rating(object):
         rating_id = self.create_rating()
         res = self.client.get(f'{self.rating_url}/{rating_id}')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_update_self_rating(self):
+        rating_id = self.create_rating()
+        res = self.client.put(f'{self.rating_url}/{rating_id}',
+                              {'rating': 2,
+                               'comment': 'test111'})
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_update_rating_of_other_person(self):
+        if self.role == Roles.SUPERUSER_ROLE_NAME:
+            location_id = self.create_location()
+            role = setting.Roles.NORMAL_USER_ONE_ROLE_NAME
+            normal_user_one_email = setting.AUTH_DATA[role][setting.EMAIL_NAME]
+            normal_user_one_password = setting.AUTH_DATA[role][setting.PASSWORD_NAME]
+            self.login(normal_user_one_email, normal_user_one_password)
+            res = self.client.post(self.rating_url,
+                                   {'location_id': location_id,
+                                    'rating': 1,
+                                    'comment': 'test'})
+            rating_id = res.data['id']
+            self.login(self.email, self.password)
+            res = self.client.put(f'{self.rating_url}/{rating_id}',
+                                  {'rating': 2,
+                                   'comment': 'test111'})
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+        elif self.role == Roles.NORMAL_USER_ONE_ROLE_NAME:
+            location_id = self.create_location()
+            role = setting.Roles.SUPERUSER_ROLE_NAME
+            superuser_email = setting.AUTH_DATA[role][setting.EMAIL_NAME]
+            superuser_password = setting.AUTH_DATA[role][setting.PASSWORD_NAME]
+            self.login(superuser_email, superuser_password)
+            res = self.client.post(self.rating_url,
+                                   {'location_id': location_id,
+                                    'rating': 1,
+                                    'comment': 'test'})
+            rating_id = res.data['id']
+            self.login(self.email, self.password)
+            res = self.client.put(f'{self.rating_url}/{rating_id}',
+                                  {'rating': 2,
+                                   'comment': 'test111'})
+            self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)

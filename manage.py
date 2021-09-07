@@ -60,7 +60,7 @@ def main():
             user_class = NormalUserOne
             user_class.__bases__ += (Location, Country, Rating)
             single_test = unittest.TestSuite()
-            single_test.addTest(user_class('test_get_specific_rating'))
+            single_test.addTest(user_class('test_update_rating_of_other_person'))
             result = unittest.TextTestRunner(verbosity=2).run(single_test)
         return exit(1) if result.errors else exit(0)
     else:

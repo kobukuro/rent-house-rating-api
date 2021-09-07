@@ -1,4 +1,4 @@
-IS_EXECUTE_ALL_TEST = False
+IS_EXECUTE_ALL_TEST = True
 
 
 class Roles(object):
