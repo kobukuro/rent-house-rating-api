@@ -115,3 +115,18 @@ class RatingList(APIView):
                 return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RatingDetail(APIView):
+    permission_classes = [CustomPermissionClass(api_name=__qualname__)]
+
+    def get_object(self, pk):
+        try:
+            return Rating.objects.get(pk=pk)
+        except Rating.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        rating = self.get_object(pk)
+        serializer = RatingSerializer(rating)
+        return Response(serializer.data)

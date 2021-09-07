@@ -100,6 +100,14 @@ class Location(object):
 
 
 class Rating(object):
+    def create_rating(self):
+        location_id = self.create_location()
+        res = self.client.post(self.rating_url,
+                               {'location_id': location_id,
+                                'rating': 1,
+                                'comment': 'test'})
+        return res.data['id']
+
     def test_get_all_ratings(self):
         res = self.client.get(self.rating_url)
         if res.status_code != status.HTTP_200_OK and \
@@ -108,9 +116,14 @@ class Rating(object):
 
     def test_create_rating(self):
         location_id = self.create_location()
-        res = self.client.post(self.rating_url,  # {'location_id': location_id}
+        res = self.client.post(self.rating_url,
                                {'location_id': location_id,
                                 'rating': 1,
                                 'comment': 'test'})
-        print(res.data)
+        # print(res.data)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+    def test_get_specific_rating(self):
+        rating_id = self.create_rating()
+        res = self.client.get(f'{self.rating_url}/{rating_id}')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)

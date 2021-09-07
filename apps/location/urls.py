@@ -8,6 +8,7 @@ urlpatterns = [
     path('locations', views.LocationList.as_view()),
     path('locations/<int:pk>', views.LocationDetail.as_view()),
     path('ratings', views.RatingList.as_view()),
+    path('ratings/<int:pk>', views.RatingDetail.as_view()),
 
     # function based views
     # path('countries', views.country_list),
