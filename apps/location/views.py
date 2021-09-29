@@ -65,17 +65,12 @@ class LocationList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        country_id = request.data['country_id']
-        try:
-            country = Country.objects.get(id=country_id)
-        except Country.DoesNotExist:
-            return Response({"detail": f"Country with id {country_id} does not exist"},
-                            status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(id=request.user.id)
         serializer = LocationSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                serializer.save(country_id=country.id, created_by=user)
+                country_id = request.data['country_id']
+                serializer.save(country_id=country_id, created_by=user)
             except IntegrityError as e:
                 serializer.error_messages = str(e)
                 return Response(serializer.error_messages,
