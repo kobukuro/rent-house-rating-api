@@ -66,7 +66,11 @@ class LocationList(APIView):
 
     def post(self, request):
         country_id = request.data['country_id']
-        country = Country.objects.get(id=country_id)
+        try:
+            country = Country.objects.get(id=country_id)
+        except Country.DoesNotExist:
+            return Response({"detail": f"Country with id {country_id} does not exist"},
+                            status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(id=request.user.id)
         serializer = LocationSerializer(data=request.data)
         if serializer.is_valid():
@@ -74,7 +78,8 @@ class LocationList(APIView):
                 serializer.save(country_id=country.id, created_by=user)
             except IntegrityError as e:
                 serializer.error_messages = str(e)
-                return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.error_messages,
+                                status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -93,7 +98,16 @@ class LocationDetail(APIView):
         serializer = LocationSerializer(location)
         return Response(serializer.data)
 
-    # 假如這個location底下有不是自己的rating，就不能改，也不能刪
+    # 假如這個location底下有不是自己的rating，就不能改，
+    # 回傳412
+    def put(self, request, pk):
+        location = self.get_object(pk)
+        # Rating.objects.get(location_i)
+        serializer = LocationSerializer(location, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RatingList(APIView):

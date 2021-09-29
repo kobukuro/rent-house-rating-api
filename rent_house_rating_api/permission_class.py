@@ -19,7 +19,10 @@ class CustomPermissionClass(BasePermission):
                 api_id = Api.objects.get(name=self.api_name).id
             except Api.DoesNotExist:
                 return False
-            role_id = request.user.role.id
+            try:
+                role_id = request.user.role.id
+            except AttributeError:
+                return False
             privilege = ApiPrivileges.objects.get(api_id=api_id,
                                                   role_id=role_id).privilege
             if request.method == 'GET' and privilege & MethodPrivilege.GET:
