@@ -29,6 +29,8 @@ class LocationSerializer(serializers.ModelSerializer):
 #         return instance
 
 class RatingSerializer(serializers.ModelSerializer):
+    location_id = serializers.IntegerField()  # 加在這裡serializer才會檢查
+
     class Meta:
         model = Rating
         fields = ['id', 'rating', 'comment', 'location_id']

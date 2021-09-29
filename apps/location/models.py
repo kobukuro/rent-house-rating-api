@@ -34,9 +34,15 @@ class Location(models.Model):
 
 class Rating(models.Model):
     RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
-    location = models.ForeignKey(Location, related_name='ratings', on_delete=models.CASCADE, null=False)
-    rating = models.IntegerField(choices=RATING_CHOICES, null=False)
+    location = models.ForeignKey(Location, related_name='ratings', on_delete=models.CASCADE,
+                                 blank=False)
+    rating = models.IntegerField(choices=RATING_CHOICES, blank=False)
     comment = models.TextField(blank=True)
     created_by = models.ForeignKey(User, related_name='ratings', on_delete=models.CASCADE, null=False,
                                    db_column='created_by')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['location', 'rating', 'created_by'], name='unique_location_rating'),
+        ]
