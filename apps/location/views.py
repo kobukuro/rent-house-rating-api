@@ -93,17 +93,39 @@ class LocationDetail(APIView):
         serializer = LocationSerializer(location)
         return Response(serializer.data)
 
-    # 假如這個location底下有不是自己的rating，就不能改，
-    # 回傳412
     def put(self, request, pk):
         location = self.get_object(pk)
-        # Rating.objects.get(location_i)
-        serializer = LocationSerializer(location, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if location.created_by_id != request.user.id:
+            return Response({'detail': 'You can not modify the location which is not created by you.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        # 這個location底下，除了自己以外的rating
+        ratings = Rating.objects.filter(location_id=pk).exclude(created_by=request.user.id)
+        if ratings:  # 這個location底下有不是自己的rating
+            return Response({'detail': 'There is rating of other people under this location, so you can not modify.'},
+                            status=status.HTTP_412_PRECONDITION_FAILED)
+        else:  # 這個location底下目前只有自己的rating
+            serializer = LocationSerializer(location, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def patch(self, request, pk):
+        location = self.get_object(pk)
+        if location.created_by_id != request.user.id:
+            return Response({'detail': 'You can not modify the location which is not created by you.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        # 這個location底下，除了自己以外的rating
+        ratings = Rating.objects.filter(location_id=pk).exclude(created_by=request.user.id)
+        if ratings:  # 這個location底下有不是自己的rating
+            return Response({'detail': 'There is rating of other people under this location, so you can not modify.'},
+                            status=status.HTTP_412_PRECONDITION_FAILED)
+        else:  # 這個location底下目前只有自己的rating
+            serializer = LocationSerializer(location, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RatingList(APIView):
     permission_classes = [CustomPermissionClass(api_name=__qualname__)]
