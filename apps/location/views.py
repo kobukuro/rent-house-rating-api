@@ -180,3 +180,22 @@ class RatingDetail(APIView):
                     serializer.save()
                     return Response(serializer.data)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        rating = self.get_object(pk)
+        if request.user.is_superuser:
+            serializer = RatingSerializer(rating, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # 只能改自己寫的rating資料
+            if rating.created_by.id != request.user.id:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+            else:
+                serializer = RatingSerializer(rating, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
