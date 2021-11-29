@@ -30,6 +30,7 @@ class TestBase(TestCase):
                                       email=email,
                                       password=password)
         # endregion
+        # region create normal user one
         role = setting.Roles.NORMAL_USER_ONE_ROLE_NAME
         username = setting.AUTH_DATA[role][setting.USERNAME_NAME]
         email = setting.AUTH_DATA[role][setting.EMAIL_NAME]
@@ -40,6 +41,19 @@ class TestBase(TestCase):
                                      'password': password,
                                      'first_name': 'test_first_name',
                                      'last_name': 'test_last_name'})
+        # endregion
+        # region create normal user two
+        role = setting.Roles.NORMAL_USER_TWO_ROLE_NAME
+        username = setting.AUTH_DATA[role][setting.USERNAME_NAME]
+        email = setting.AUTH_DATA[role][setting.EMAIL_NAME]
+        password = setting.AUTH_DATA[role][setting.PASSWORD_NAME]
+        response = self.client.post(self.register_url,
+                                    {'username': username,
+                                     'email': email,
+                                     'password': password,
+                                     'first_name': 'test_first_name',
+                                     'last_name': 'test_last_name'})
+        # endregion
         # print(response.data)
 
     def login(self, email, password):

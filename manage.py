@@ -4,7 +4,8 @@ import os
 import sys
 import unittest
 from tests.setting import setting
-
+import pymysql
+from rent_house_rating_api.settings import DATABASES
 
 def main():
     """Run administrative tasks."""
@@ -57,12 +58,35 @@ def main():
         else:
             from tests.test_roles import SuperUser, NormalUserOne
             from apps.location.tests import Location, Country, Rating
-            user_class = NormalUserOne
+            user_class = SuperUser
             user_class.__bases__ += (Location, Country, Rating)
             single_test = unittest.TestSuite()
-            single_test.addTest(user_class('test_update_rating_of_other_person'))
+            single_test.addTest(user_class('test_update_self_location_with_rating_of_others'))
             result = unittest.TextTestRunner(verbosity=2).run(single_test)
         return exit(1) if result.errors else exit(0)
+    elif sys.argv[1] == 'execute' and sys.argv[2] == 'sqls':
+        file_paths = [r'sqls\rent_house_rating_system_role.sql',
+                      r'sqls\rent_house_rating_system_api.sql',
+                      r'sqls\rent_house_rating_system_apiprivileges.sql']
+        local = dict(host=DATABASES['default']['HOST'],
+                     port=int(DATABASES['default']['PORT']),
+                     user=DATABASES['default']['USER'],
+                     password=DATABASES['default']['PASSWORD'],
+                     db=DATABASES['default']['NAME'])
+        conn = pymysql.connect(**local)
+        with conn.cursor() as cursor:
+            for file_path in file_paths:
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        for row in f.readlines():
+                            try:
+                                cursor.execute(row)
+                                conn.commit()
+                            except Exception as e:
+                                print(row)
+                                print(f'{e}')
+                except Exception as e:
+                    print(f'{e}')
     else:
         execute_from_command_line(sys.argv)
     # python manage.py test tests/ --pattern="test_roles.py" -v 2
