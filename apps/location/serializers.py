@@ -16,7 +16,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ['id', 'address', 'country_id', 'country_name', 'owner_name']
+        fields = ['id', 'address', 'country_id', 'country_name', 'owner_name', 'lat', 'lng']
 
 
 #     def update(self, instance, validated_data):

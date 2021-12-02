@@ -24,6 +24,8 @@ class Location(models.Model):
                                    db_column='created_by')
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
+    lat = models.FloatField(blank=False)
+    lng = models.FloatField(blank=False)
 
     class Meta:
         constraints = [
