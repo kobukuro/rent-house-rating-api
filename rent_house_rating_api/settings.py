@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,12 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.system.apps.SystemConfig',
-    'apps.location.apps.LocationConfig'
+    'apps.location.apps.LocationConfig',
+    'corsheaders',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -51,7 +55,8 @@ MIDDLEWARE = [
 # 設置預設authentication_classes以及permission_classes
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework.authentication.TokenAuthentication'
         # 用TokenAuthentication的話
         # 用Postman時要在Headers加{'Authorization': Token token_key}
@@ -91,7 +96,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rent-house-rating',
         'USER': 'root',
-        'PASSWORD': '123',
+        'PASSWORD': ']kH6HjsaHfD!_.Qa',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {'init_command': 'SET storage_engine=INNODB;'}
@@ -131,6 +136,17 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
 ]
 
+# JWT_AUTH = {
+#     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=10),
+#     'JWT_ALLOW_REFRESH': True,
+# }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -153,3 +169,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_WHITELIST = 'http://localhost:8080',

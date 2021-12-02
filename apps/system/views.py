@@ -3,6 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from apps.system.serializers import UserSerializer
 from rest_framework_jwt.views import ObtainJSONWebTokenView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from apps.system.models import User
 from rent_house_rating_api.permission_class import CustomPermissionClass
 
@@ -20,18 +24,31 @@ class RegisterUserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CustomObtainJSONWebToken(ObtainJSONWebTokenView):
+# class CustomObtainJSONWebToken(ObtainJSONWebTokenView):
+#     def post(self, request, *args, **kwargs):
+#         parent_result = super().post(request, *args, **kwargs)
+#         parent_result_status_code = super().post(request, *args, **kwargs).status_code
+#         # 成功登入要update users_user table的last_login欄位
+#         if parent_result_status_code == status.HTTP_201_CREATED:
+#             user = User.objects.get(email=request.data['email'])
+#             from django.utils import timezone
+#             user.last_login = timezone.now()
+#             user.save()
+#             parent_result.data['username'] = user.username
+#         return parent_result
+
+class CustomObtainJSONWebToken(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         parent_result = super().post(request, *args, **kwargs)
         parent_result_status_code = super().post(request, *args, **kwargs).status_code
         # 成功登入要update users_user table的last_login欄位
-        if parent_result_status_code == status.HTTP_201_CREATED:
+        if parent_result_status_code == status.HTTP_200_OK:
             user = User.objects.get(email=request.data['email'])
             from django.utils import timezone
             user.last_login = timezone.now()
             user.save()
+            parent_result.data['username'] = user.username
         return parent_result
-
 
 class UserList(APIView):
     permission_classes = [CustomPermissionClass(api_name=__qualname__)]
