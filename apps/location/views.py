@@ -7,14 +7,23 @@ from rest_framework import status
 from rent_house_rating_api.permission_class import CustomPermissionClass
 from django.http import Http404
 from django.db import IntegrityError
+from django_filters import rest_framework as filters
 
 
 class CountryList(APIView):
     permission_classes = [CustomPermissionClass(api_name=__qualname__)]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ['name']
+
+    def filter_queryset(self, queryset):
+        for backend in list(self.filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, self)
+        return queryset
 
     def get(self, request):
         countries = Country.objects.all()
-        serializer = CountrySerializer(countries, many=True)
+        filtered_qs = self.filter_queryset(countries)
+        serializer = CountrySerializer(filtered_qs, many=True)
         if not serializer.data:
             return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -146,10 +155,18 @@ class LocationDetail(APIView):
 
 class RatingList(APIView):
     permission_classes = [CustomPermissionClass(api_name=__qualname__)]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ['location_id']
+
+    def filter_queryset(self, queryset):
+        for backend in list(self.filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, self)
+        return queryset
 
     def get(self, request):
         ratings = Rating.objects.all()
-        serializer = RatingSerializer(ratings, many=True)
+        filtered_qs = self.filter_queryset(ratings)
+        serializer = RatingSerializer(filtered_qs, many=True)
         return Response(serializer.data)
 
     def post(self, request):
