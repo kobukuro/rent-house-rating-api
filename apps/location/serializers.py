@@ -11,7 +11,7 @@ class CountrySerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     # response顯示哪一個欄位的設定(顯示country table的country_name)
     # 記得fields裡面也要有
-    country_name = serializers.ReadOnlyField(source='country.country_name')
+    country_name = serializers.ReadOnlyField(source='country.name')
     country_id = serializers.IntegerField()
 
     class Meta:
@@ -30,7 +30,10 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class RatingSerializer(serializers.ModelSerializer):
     location_id = serializers.IntegerField()  # 加在這裡serializer才會檢查
+    # 變數名要和fields裡欄位一樣(response的欄位)
+    # source為model裡欄位名稱(代表另一個關聯的table)，加上「.」，再加上要取得的另一個table的欄位
+    created_by_username = serializers.ReadOnlyField(source='created_by.username')
 
     class Meta:
         model = Rating
-        fields = ['id', 'rating', 'comment', 'location_id']
+        fields = ['id', 'rating', 'comment', 'location_id', 'created_by_username']
