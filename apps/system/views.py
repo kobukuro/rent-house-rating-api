@@ -48,6 +48,7 @@ class CustomObtainJSONWebToken(TokenObtainPairView):
             user.last_login = timezone.now()
             user.save()
             parent_result.data['username'] = user.username
+            parent_result.data['user_id'] = user.id
         return parent_result
 
 class UserList(APIView):
