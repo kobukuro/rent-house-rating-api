@@ -156,7 +156,7 @@ class LocationDetail(APIView):
 class RatingList(APIView):
     permission_classes = [CustomPermissionClass(api_name=__qualname__)]
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ['location_id']
+    filterset_fields = ['location_id', 'created_by_username']
 
     def filter_queryset(self, queryset):
         for backend in list(self.filter_backends):
