@@ -13,10 +13,11 @@ class LocationSerializer(serializers.ModelSerializer):
     # 記得fields裡面也要有
     country_name = serializers.ReadOnlyField(source='country.name')
     country_id = serializers.IntegerField()
+    created_by_username = serializers.ReadOnlyField(source='created_by.username')
 
     class Meta:
         model = Location
-        fields = ['id', 'address', 'country_id', 'country_name', 'owner_name', 'lat', 'lng']
+        fields = ['id', 'address', 'country_id', 'country_name', 'owner_name', 'lat', 'lng', 'created_by_username']
 
 
 #     def update(self, instance, validated_data):
