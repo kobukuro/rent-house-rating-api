@@ -152,6 +152,25 @@ class LocationDetail(APIView):
                     return Response(serializer.data)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, pk):
+        location = self.get_object(pk)
+        if request.user.is_superuser:
+            location.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            if location.created_by_id != request.user.id:
+                return Response({'detail': 'You can not delete the location which is not created by you.'},
+                                status=status.HTTP_403_FORBIDDEN)
+            # 這個location底下，除了自己以外的rating
+            ratings = Rating.objects.filter(location_id=pk).exclude(created_by=request.user.id)
+            if ratings:  # 這個location底下有不是自己的rating
+                return Response(
+                    {'detail': 'There is rating of other people under this location, so you can not delete.'},
+                    status=status.HTTP_412_PRECONDITION_FAILED)
+            else:  # 這個location底下目前只有自己的rating
+                location.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class RatingList(APIView):
     permission_classes = [CustomPermissionClass(api_name=__qualname__)]
