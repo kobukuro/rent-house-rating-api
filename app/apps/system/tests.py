@@ -1,4 +1,4 @@
-from tests.setting.setting import Roles
+from app.tests.setting.setting import Roles
 from rest_framework import status
 
 

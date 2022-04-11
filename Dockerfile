@@ -1,0 +1,49 @@
+FROM python:3.9-alpine3.13
+LABEL maintainer="https://peterchen.pythonanywhere.com/"
+# when running application, we want python
+# to print any outputs directly to the console
+ENV PYTHONUNBUFFERED 1
+
+COPY ./requirements.txt /requirements.txt
+COPY ./app /app
+
+# when starting the container, working directory will be /app
+# by this way,
+# we can directly run the django command without specifying the full path
+WORKDIR /app
+EXPOSE 8000
+
+# 多個指令使用同一個RUN目的為減少image layers, 讓image更輕量化
+#建立虛擬環境在/py資料夾
+RUN python -m venv /py && \
+#使用虛擬環境的pip
+    /py/bin/pip install --upgrade pip && \
+#使用postgresql db
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-deps \
+        bash gcc libc-dev libressl-dev libffi-dev \
+        cargo openssl-dev rust \
+        build-base postgresql-dev musl-dev linux-headers && \
+    /py/bin/pip install -r /requirements.txt && \
+    apk del .tmp-deps && \
+# 新增一個user名叫app(這個user不需要密碼, 也不需要建立home目錄給這個user)
+    adduser --disabled-password --no-create-home app && \
+# 建立資料夾(-p:create any sub directories that need to be created
+# in order to create that full path)
+    mkdir -p /vol/web/static && \
+    mkdir -p /vol/web/media && \
+# changes the ownership pf the file(because default will be root user)
+    chown -R app:app /vol && \
+# give permission(1.文件所有者可讀可寫可執行
+#                 2.文件所有者同和其他用戶可讀可執行
+#                 3.其它用戶组可讀可執行)
+    chmod -R 755 /vol
+#    chmod -R +x /scripts
+
+# 使用python指令, 直接使用虛擬環境的(就不用specify full path)
+ENV PATH="/py/bin:$PATH"
+# switch from root user(default user) to user named app
+# 此為資安考量
+USER app
+
+#CMD ["run.sh"]

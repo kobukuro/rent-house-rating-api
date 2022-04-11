@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      # 所以會使用和這個docker-compose.yml一樣目錄底下的Dockerfile
+      context: .
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py execute sqls &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    # mapping local machine目錄以及container的目錄, 做到同步更新, 而不用手動重啟container
+    volumes:
+      - ./app:/app
+      - ./data/web:/vol/web
+#    此為環境變數
+    environment:
+      - SECRET_KEY=devsecretkey
+# 開啟DEBUG
+      - DEBUG=1
+#指定service name
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+      - DB_PORT=5432
+# 1. db container should start before the app container
+# 2. there should be a network connection set up the app and the db container
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme

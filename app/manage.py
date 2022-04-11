@@ -4,8 +4,9 @@ import os
 import sys
 import unittest
 from tests.setting import setting
-import pymysql
+import psycopg2
 from rent_house_rating_api.settings import DATABASES
+
 
 def main():
     """Run administrative tasks."""
@@ -68,12 +69,12 @@ def main():
         file_paths = [r'sqls\rent_house_rating_system_role.sql',
                       r'sqls\rent_house_rating_system_api.sql',
                       r'sqls\rent_house_rating_system_apiprivileges.sql']
-        local = dict(host=DATABASES['default']['HOST'],
-                     port=int(DATABASES['default']['PORT']),
-                     user=DATABASES['default']['USER'],
-                     password=DATABASES['default']['PASSWORD'],
-                     db=DATABASES['default']['NAME'])
-        conn = pymysql.connect(**local)
+        local = dict(host=os.environ.get('DB_HOST'),
+                     user=os.environ.get('DB_USER'),
+                     password=os.environ.get('DB_PASS'),
+                     dbname=os.environ.get('DB_NAME'),
+                     port=os.environ.get('DB_PORT'))
+        conn = psycopg2.connect(**local)
         with conn.cursor() as cursor:
             for file_path in file_paths:
                 try:
