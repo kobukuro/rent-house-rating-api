@@ -58,4 +58,4 @@ class TestBase(TestCase):
 
     def login(self, email, password):
         response = self.client.post(self.login_url, {'email': email, 'password': password})
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data['token'])
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data['access'])

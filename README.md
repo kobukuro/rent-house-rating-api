@@ -16,3 +16,11 @@ python manage.py execute sqls
 ```
 python manage.py test
 ```
+## Docker compose
+```
+cp .env.sample .env
+vi .env
+docker-compose -f docker-compose-deploy.yml down --volumes
+docker-compose -f docker-compose-deploy.yml build
+docker-compose -f docker-compose-deploy.yml up
+```

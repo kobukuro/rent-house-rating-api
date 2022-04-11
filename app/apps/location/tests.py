@@ -1,6 +1,6 @@
-from app.tests.setting.setting import Roles
+from tests.setting.setting import Roles
 from rest_framework import status
-from app.tests.setting import setting
+from tests.setting import setting
 
 
 class Country(object):

@@ -66,9 +66,9 @@ def main():
             result = unittest.TextTestRunner(verbosity=2).run(single_test)
         return exit(1) if result.errors else exit(0)
     elif sys.argv[1] == 'execute' and sys.argv[2] == 'sqls':
-        file_paths = [r'sqls\rent_house_rating_system_role.sql',
-                      r'sqls\rent_house_rating_system_api.sql',
-                      r'sqls\rent_house_rating_system_apiprivileges.sql']
+        file_paths = [os.path.join('sqls', 'rent_house_rating_system_role.sql'),
+                      os.path.join('sqls', 'rent_house_rating_system_api.sql'),
+                      os.path.join('sqls', 'rent_house_rating_system_apiprivileges.sql')]
         local = dict(host=os.environ.get('DB_HOST'),
                      user=os.environ.get('DB_USER'),
                      password=os.environ.get('DB_PASS'),
