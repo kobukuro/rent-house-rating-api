@@ -22,6 +22,7 @@ EXPOSE 8000
 RUN python -m venv /py && \
 #使用虛擬環境的pip
     /py/bin/pip install --upgrade pip && \
+# apk:alpine package manager
 #使用postgresql db
 #.tmp-deps代表temporary dependencies
 # postgresql-client is the dependencies needed AFTER the postgres driver is installed
