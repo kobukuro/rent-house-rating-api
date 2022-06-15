@@ -1,7 +1,8 @@
 FROM python:3.9-alpine3.13
 LABEL maintainer="https://peterchen.pythonanywhere.com/"
 # when running application, we want python
-# to print any outputs directly to the console
+# to print any outputs directly to the console,
+# so it dosen't buffer the outputs which can create issues
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
