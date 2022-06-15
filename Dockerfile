@@ -15,6 +15,7 @@ COPY ./scripts /scripts
 WORKDIR /app
 EXPOSE 8000
 
+# RUN的意思為 runs a command when we're building our image
 # 多個指令使用同一個RUN目的為減少image layers, 讓image更輕量化
 #建立虛擬環境在/py資料夾
 RUN python -m venv /py && \
