@@ -23,12 +23,16 @@ RUN python -m venv /py && \
 #使用虛擬環境的pip
     /py/bin/pip install --upgrade pip && \
 #使用postgresql db
-    apk add --update --no-cache postgresql-client && \
-    apk add --update --no-cache --virtual .tmp-deps \
+#.tmp-deps代表temporary dependencies
+# postgresql-client is the dependencies needed AFTER the postgres driver is installed
+# .tmp-deps的部分是 temp dependencies needed to install the driver
+    apk add --update --no-cache postgresql-client \
         bash gcc libc-dev libressl-dev libffi-dev \
-        cargo openssl-dev rust \
+        cargo openssl-dev rust && \
+    apk add --update --no-cache --virtual .tmp-deps \
         build-base postgresql-dev musl-dev linux-headers && \
     /py/bin/pip install -r /requirements.txt && \
+# delete temporary dependencies to keep the image lightweight
     apk del .tmp-deps && \
 # 新增一個user名叫app(這個user不需要密碼, 也不需要建立home目錄給這個user)
     adduser --disabled-password --no-create-home app && \

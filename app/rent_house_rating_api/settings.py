@@ -27,9 +27,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
 ALLOWED_HOSTS = []
+# extends means appending items to the end of ALLOWED_HOSTS list
 ALLOWED_HOSTS.extend(
     filter(
-        None,
+        None,  # it means removing any None value
         os.environ.get('ALLOWED_HOSTS', '').split(','),
     )
 )
