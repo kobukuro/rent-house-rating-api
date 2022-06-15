@@ -27,7 +27,7 @@ RUN python -m venv /py && \
 #.tmp-deps代表temporary dependencies
 # postgresql-client is the dependencies needed AFTER the postgres driver is installed
 # .tmp-deps的部分是 temp dependencies needed to install the driver
-    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache postgresql-client \
         bash gcc libc-dev libressl-dev libffi-dev \
         cargo openssl-dev rust && \
     apk add --update --no-cache --virtual .tmp-deps \
