@@ -17,6 +17,7 @@ EXPOSE 8000
 
 # RUN的意思為 runs a command when we're building our image
 # 多個指令使用同一個RUN目的為減少image layers, 讓image更輕量化
+# (because docker will create a new image layer for every single run command)
 #建立虛擬環境在/py資料夾
 RUN python -m venv /py && \
 #使用虛擬環境的pip
@@ -44,7 +45,7 @@ RUN python -m venv /py && \
     chmod -R +x /scripts
 
 # 將/scripts以及/py/bin加入環境path中
-# 使用python指令, 直接使用虛擬環境的(就不用specify full path)
+# 使用python指令, 就會直接使用虛擬環境的(就不用specify full path)
 ENV PATH="/scripts:/py/bin:$PATH"
 # switch from root user(default user) to user named app
 # 此為資安考量
