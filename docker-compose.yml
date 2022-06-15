@@ -11,6 +11,8 @@ services:
              python manage.py execute sqls &&
              python manage.py runserver 0.0.0.0:8000"
     ports:
+      # 將host的8000 port和container的8000 port mapping起來,
+      # 接著就可以直接使用localhost:8000和這個container的8000 port溝通
       - 8000:8000
     # mapping local machine目錄以及container的目錄, 做到同步更新, 而不用手動重啟container
     volumes:
